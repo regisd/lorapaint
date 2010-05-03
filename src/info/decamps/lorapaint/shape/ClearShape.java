@@ -1,11 +1,11 @@
 package info.decamps.lorapaint.shape;
 
+import info.decamps.lorapaint.LoraShape;
+
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
-import info.decamps.lorapaint.LoraShape;
-import info.decamps.lorapaint.LoraSurfaceView;
 
 public class ClearShape implements LoraShape {
 	private float mRed;

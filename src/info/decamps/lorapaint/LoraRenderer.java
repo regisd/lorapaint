@@ -1,20 +1,14 @@
 package info.decamps.lorapaint;
 
-import info.decamps.lorapaint.shape.ClearShape;
-import info.decamps.lorapaint.shape.SquareShape;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.opengl.GLSurfaceView;
-import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
-import android.view.SurfaceView;
-import android.view.View.OnTouchListener;
 
 public class LoraRenderer implements Renderer {
 	/** Current shape in use. */
 	protected LoraShape shape;
+	protected GL10 gl;
 	
 	public LoraShape getShape() {
 		return shape;
@@ -32,24 +26,32 @@ public class LoraRenderer implements Renderer {
 	 * .khronos.opengles.GL10, javax.microedition.khronos.egl.EGLConfig)
 	 */
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		this.gl=gl;
+		
 		// Set the background color to black ( rgba ).
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
-		// Enable Smooth Shading, default not really needed.
+		gl.glDisable(GL10.GL_DITHER);
+		// don't hide backward vertices
+		gl.glDisable(GL10.GL_CULL_FACE);
 		gl.glShadeModel(GL10.GL_SMOOTH);
-		// Depth buffer setup.
-		gl.glClearDepthf(1.0f);
-		// Enables depth testing.
-		gl.glEnable(GL10.GL_DEPTH_TEST);
-		// The type of depth testing to do.
-		gl.glDepthFunc(GL10.GL_LEQUAL);
+		gl.glDisable(GL10.GL_DEPTH_TEST);
+		gl.glEnable(GL10.GL_TEXTURE_2D);
+
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 		// Really nice perspective calculations.
-		//gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		// gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+		gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
 
 		// TODO If you are developing a reactive application, you can call
 		// GLSurfaceView.setRenderMode(RENDERMODE_WHEN_DIRTY), which turns off
 		// the continuous animation. Then you call GLSurfaceView.requestRender()
 		// whenever you want to re-render.
 
+	}
+
+	public GL10 getGL10() {
+		return gl;
 	}
 
 	/*
@@ -64,10 +66,10 @@ public class LoraRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		// Replace the current matrix with the identity matrix
 		gl.glLoadIdentity();
-		// Translates 4 units into the screen.
-		gl.glTranslatef(0, 0, -4);
+		// Translates the camera so that the screen corresponds to the view.
+		gl.glTranslatef(0, 0, -100);
 		// Draw our shapes.
-		//square.draw(gl);
+		// square.draw(gl);
 		shape.draw(gl);
 	}
 
@@ -81,17 +83,11 @@ public class LoraRenderer implements Renderer {
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		// Sets the current view port to the new size.
 		gl.glViewport(0, 0, width, height);
-		// Select the projection matrix
+
 		gl.glMatrixMode(GL10.GL_PROJECTION);
-		// Reset the projection matrix
 		gl.glLoadIdentity();
-		// Calculate the aspect ratio of the window
-		GLU.gluPerspective(gl, 45.0f, (float) width / (float) height, 0.1f,
-				100.0f);
-		// Select the modelview matrix
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		// Reset the modelview matrix
-		gl.glLoadIdentity();
+		//gl.glOrthof(0f, (float)width, 0f, (float)height, 0f, 1f);
+		gl.glOrthof(0f, 1f, 1f, 0f, -1f, 1f);
 	}
 
 }

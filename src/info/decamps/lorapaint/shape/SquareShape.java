@@ -1,7 +1,6 @@
 package info.decamps.lorapaint.shape;
 
 import info.decamps.lorapaint.LoraShape;
-import info.decamps.lorapaint.LoraSurfaceView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -18,13 +17,13 @@ public class SquareShape implements LoraShape {
 	private final static int Y = 1;
 	private final static int Z = 2;
 	// Our vertices.
-	private float vertices[][] = null;
 	// = { [point][x,y,z]
-	// -1.0f, 1.0f, 0.0f, // 0, Top Left
-	// -1.0f, -1.0f, 0.0f, // 1, Bottom Left
-	// 1.0f, -1.0f, 0.0f, // 2, Bottom Right
-	// 1.0f, 1.0f, 0.0f, // 3, Top Right
-	// };
+	private float vertices[][] = {
+			{ 10f, 10f, 0f}, // 0, Top Left
+ {10f, 60f, 0f}, // 1, Bottom Left
+ {50f, 60f, 0.0f}, // 2, Bottom Right
+ {50f, 10f, 0.0f} // 3, Top Right
+ };
 
 	// The order we like to connect them.
 	private short[] indices = { 0, 1, 2, 0, 2, 3 };
@@ -34,6 +33,7 @@ public class SquareShape implements LoraShape {
 
 	// Our index buffer.
 	private ShortBuffer indexBuffer;
+	private GLSurfaceView glView;
 
 	public SquareShape() {
 		// short is 2 bytes, therefore we multiply the number if
@@ -43,6 +43,7 @@ public class SquareShape implements LoraShape {
 		indexBuffer = ibb.asShortBuffer();
 		indexBuffer.put(indices);
 		indexBuffer.position(0);
+		updateVertexBuffer();
 	}
 
 	/*
@@ -53,18 +54,12 @@ public class SquareShape implements LoraShape {
 	 * .opengles.GL10)
 	 */
 	public void draw(GL10 gl) {
-		if (vertices == null)
+		if (vertices == null) {
+			System.out.println("vertices null");
 			return;
-		// Counter-clockwise winding.
-		gl.glFrontFace(GL10.GL_CCW); // OpenGL docs
-		// Enable face culling.
-		gl.glEnable(GL10.GL_CULL_FACE); // OpenGL docs
-		// What faces to remove with the face culling.
-		gl.glCullFace(GL10.GL_BACK); // OpenGL docs
-
-		// Enabled the vertices buffer for writing and to be used during
-		// rendering.
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);// OpenGL docs.
+		}
+		gl.glLoadIdentity();
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
 		// Specifies the location and data format of an array of vertex
 		// coordinates to use when rendering.
 		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, // OpenGL docs
@@ -75,8 +70,6 @@ public class SquareShape implements LoraShape {
 
 		// Disable the vertices buffer.
 		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY); // OpenGL docs
-		// Disable face culling.
-		gl.glDisable(GL10.GL_CULL_FACE); // OpenGL docs
 	}
 
 	public void setTopLeftCorner(float x, float y) {
@@ -107,20 +100,22 @@ public class SquareShape implements LoraShape {
 		// vertexBuffer.put(vertices);
 		for (float[] point : vertices) {
 			vertexBuffer.put(point);
+			System.out.println("Point"+point[X]+","+point[Y]+","+point[Z]);
 		}
 		vertexBuffer.position(0);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		float x = event.getX();
+		float x =  event.getX();
 		float y = event.getY();
 		int a = event.getAction();
+		System.out.println("event "+event.getAction());
 		if (a == MotionEvent.ACTION_MOVE || a == MotionEvent.ACTION_UP) {
 			setBottomRightCorner(x, y);
 		} else if (a == MotionEvent.ACTION_DOWN) {
 			// drawing starts
-			vertices = new float[4][3];
+			//vertices = new float[4][3];
 			setTopLeftCorner(x, y);
 		}
 		return true;
@@ -128,8 +123,7 @@ public class SquareShape implements LoraShape {
 
 	@Override
 	public void setGLView(GLSurfaceView gl) {
-		// not needed
-		
+		glView=gl;	
 	}
 
 }

@@ -1,21 +1,20 @@
 package info.decamps.lorapaint;
 
 import info.decamps.lorapaint.shape.ClearShape;
+import info.decamps.lorapaint.shape.PointShape;
 import info.decamps.lorapaint.shape.SquareShape;
 import android.app.Activity;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
 public class LoraPaintActivity extends Activity {
 	private boolean fullscreen=false;
 	private LoraSurfaceView lView; 
-	public static enum MENU {SHAPE_SQUARE, SHAPE_CLEAR, FILE_SAVE, FILE_QUIT}; 
+	public static enum MENU {SHAPE_SQUARE, SHAPE_CLEAR, SHAPE_POINT, FILE_SAVE, FILE_QUIT}; 
 	
     /** Called when the activity is first created. */
     @Override
@@ -52,6 +51,7 @@ public class LoraPaintActivity extends Activity {
 		//TODO plugin architecture
 		shapeMenu.add(0, MENU.SHAPE_SQUARE.ordinal(),0,"Square");
 		shapeMenu.add(0, MENU.SHAPE_CLEAR.ordinal(),0,"Colorful background");
+		shapeMenu.add(0, MENU.SHAPE_POINT.ordinal(),0,"debug point");
 		SubMenu fileMenu = menu.addSubMenu("File");
 		fileMenu.add(0,MENU.FILE_SAVE.ordinal(),0,"Save");
 	    fileMenu.add(0, MENU.FILE_QUIT.ordinal(), 0, "Quit");
@@ -68,6 +68,10 @@ public class LoraPaintActivity extends Activity {
 			return true;
 		case SHAPE_CLEAR:
 			s=new ClearShape();
+			lView.setShape(s);
+			return true;
+		case SHAPE_POINT:
+			s=new PointShape();
 			lView.setShape(s);
 			return true;
 		case FILE_QUIT:

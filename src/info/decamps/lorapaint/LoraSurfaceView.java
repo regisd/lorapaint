@@ -1,14 +1,12 @@
 package info.decamps.lorapaint;
 
-import info.decamps.lorapaint.shape.ClearShape;
-import info.decamps.lorapaint.shape.SquareShape;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
 public class LoraSurfaceView extends GLSurfaceView {
 
-	LoraRenderer mRenderer;
+	protected LoraRenderer mRenderer;
 
 	public LoraSurfaceView(Context context) {
 		super(context);
