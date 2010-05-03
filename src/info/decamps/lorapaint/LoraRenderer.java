@@ -6,19 +6,22 @@ import info.decamps.lorapaint.shape.SquareShape;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.opengl.GLSurfaceView.Renderer;
 import android.view.SurfaceView;
 import android.view.View.OnTouchListener;
 
 public class LoraRenderer implements Renderer {
-	private SquareShape square;
-	public ClearShape clearbg;
+	/** Current shape in use. */
+	protected LoraShape shape;
 	
-	public LoraRenderer() {
-		// Initialize our square.
-		//square = new SquareShape();
-		clearbg = new ClearShape();
+	public LoraShape getShape() {
+		return shape;
+	}
+
+	public void setShape(LoraShape shape) {
+		this.shape = shape;
 	}
 
 	/*
@@ -65,7 +68,7 @@ public class LoraRenderer implements Renderer {
 		gl.glTranslatef(0, 0, -4);
 		// Draw our shapes.
 		//square.draw(gl);
-		clearbg.draw(gl);
+		shape.draw(gl);
 	}
 
 	/*

@@ -1,5 +1,7 @@
 package info.decamps.lorapaint;
 
+import info.decamps.lorapaint.shape.ClearShape;
+import info.decamps.lorapaint.shape.SquareShape;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -13,7 +15,7 @@ import android.widget.FrameLayout;
 public class LoraPaintActivity extends Activity {
 	private boolean fullscreen=false;
 	private LoraSurfaceView lView; 
-	public static enum MENU {SHAPE_SQUARE,FILE_SAVE,FILE_QUIT}; 
+	public static enum MENU {SHAPE_SQUARE, SHAPE_CLEAR, FILE_SAVE, FILE_QUIT}; 
 	
     /** Called when the activity is first created. */
     @Override
@@ -25,6 +27,8 @@ public class LoraPaintActivity extends Activity {
             WindowManager.LayoutParams.FLAG_FULLSCREEN);
     	}
  		lView = new LoraSurfaceView(this);
+ 		//default shape to avoid NPE
+ 		lView.setShape(new SquareShape());
    		//lView.setRenderer(new LoraRenderer());
    		setContentView(lView);
     }
@@ -45,7 +49,9 @@ public class LoraPaintActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		SubMenu shapeMenu= menu.addSubMenu("Select Shape");
+		//TODO plugin architecture
 		shapeMenu.add(0, MENU.SHAPE_SQUARE.ordinal(),0,"Square");
+		shapeMenu.add(0, MENU.SHAPE_CLEAR.ordinal(),0,"Colorful background");
 		SubMenu fileMenu = menu.addSubMenu("File");
 		fileMenu.add(0,MENU.FILE_SAVE.ordinal(),0,"Save");
 	    fileMenu.add(0, MENU.FILE_QUIT.ordinal(), 0, "Quit");
@@ -53,9 +59,16 @@ public class LoraPaintActivity extends Activity {
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		LoraShape s;
 		switch (MENU.values().clone()[item.getItemId()]) {
 		//TODO Introspection on available shapes
 		case SHAPE_SQUARE:
+			s=new SquareShape();
+			lView.setShape(s);
+			return true;
+		case SHAPE_CLEAR:
+			s=new ClearShape();
+			lView.setShape(s);
 			return true;
 		case FILE_QUIT:
 			quit();

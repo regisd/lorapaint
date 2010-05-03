@@ -1,6 +1,7 @@
 package info.decamps.lorapaint.shape;
 
 import info.decamps.lorapaint.LoraShape;
+import info.decamps.lorapaint.LoraSurfaceView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -9,6 +10,7 @@ import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
 public class SquareShape implements LoraShape {
@@ -51,7 +53,8 @@ public class SquareShape implements LoraShape {
 	 * .opengles.GL10)
 	 */
 	public void draw(GL10 gl) {
-		if (vertices==null) return;
+		if (vertices == null)
+			return;
 		// Counter-clockwise winding.
 		gl.glFrontFace(GL10.GL_CCW); // OpenGL docs
 		// Enable face culling.
@@ -77,16 +80,16 @@ public class SquareShape implements LoraShape {
 	}
 
 	public void setTopLeftCorner(float x, float y) {
-		vertices[0][X]=x;
-		vertices[0][Y]=y;
-		vertices[1][X]=x;
-		//vertices[2] unchanged
-		vertices[3][Y]=y;
+		vertices[0][X] = x;
+		vertices[0][Y] = y;
+		vertices[1][X] = x;
+		// vertices[2] unchanged
+		vertices[3][Y] = y;
 		updateVertexBuffer();
 	}
 
 	private void setBottomRightCorner(float x, float y) {
-		// vertices[0] untocuhed
+		// vertices[0] untouched
 		vertices[1][Y] = y;
 		vertices[2][X] = x;
 		vertices[2][Y] = y;
@@ -97,10 +100,11 @@ public class SquareShape implements LoraShape {
 	private void updateVertexBuffer() {
 		// a float is 4 bytes, therefore we multiply the number if
 		// vertices with 4.
-		ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * vertices[0].length * 4);
+		ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length
+				* vertices[0].length * 4);
 		vbb.order(ByteOrder.nativeOrder());
 		vertexBuffer = vbb.asFloatBuffer();
-		//vertexBuffer.put(vertices);
+		// vertexBuffer.put(vertices);
 		for (float[] point : vertices) {
 			vertexBuffer.put(point);
 		}
@@ -111,16 +115,21 @@ public class SquareShape implements LoraShape {
 	public boolean onTouchEvent(MotionEvent event) {
 		float x = event.getX();
 		float y = event.getY();
-		int a=event.getAction();
-		if (a==MotionEvent.ACTION_MOVE || a==MotionEvent.ACTION_UP) {
-			setBottomRightCorner(x,y);
-		}
-		else if (a==MotionEvent.ACTION_DOWN) {
+		int a = event.getAction();
+		if (a == MotionEvent.ACTION_MOVE || a == MotionEvent.ACTION_UP) {
+			setBottomRightCorner(x, y);
+		} else if (a == MotionEvent.ACTION_DOWN) {
 			// drawing starts
-			vertices=new float[4][3];
+			vertices = new float[4][3];
 			setTopLeftCorner(x, y);
 		}
 		return true;
+	}
+
+	@Override
+	public void setGLView(GLSurfaceView gl) {
+		// not needed
+		
 	}
 
 }

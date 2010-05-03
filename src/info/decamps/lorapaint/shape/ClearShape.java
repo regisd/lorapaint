@@ -2,13 +2,16 @@ package info.decamps.lorapaint.shape;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import info.decamps.lorapaint.LoraShape;
+import info.decamps.lorapaint.LoraSurfaceView;
 
 public class ClearShape implements LoraShape {
-    private float mRed;
+	private float mRed;
     private float mGreen;
     private float mBlue;
+	private GLSurfaceView glView;
     
 	@Override
 	public void draw(GL10 gl) {
@@ -26,8 +29,14 @@ public class ClearShape implements LoraShape {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
+		setColor(event.getX() / glView.getWidth(), event.getY() / glView.getHeight(), 1.0f);
 		return false;
+	}
+
+	@Override
+	public void setGLView(GLSurfaceView glSurfaceView) {
+		glView=glSurfaceView;
+		
 	}
 
 }
