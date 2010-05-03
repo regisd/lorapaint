@@ -32,17 +32,6 @@ public class LoraPaintActivity extends Activity {
    		setContentView(lView);
     }
     
-    @Override
-    protected void onPause() {
-        super.onPause();
-        lView.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        lView.onResume();
-    }
     
 	/* option menu */
 	@Override
