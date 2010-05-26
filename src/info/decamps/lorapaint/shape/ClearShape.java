@@ -1,31 +1,25 @@
 package info.decamps.lorapaint.shape;
 
-import info.decamps.lorapaint.LoraShape;
+import info.decamps.lorapaint.LoraDrawable;
 import info.decamps.lorapaint.LoraSurfaceView;
 
 import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
-public class ClearShape implements LoraShape {
+public class ClearShape extends LoraDrawable {
 	private int mRed;
 	private int mGreen;
 	private int mBlue;
 	private int pressure;
 	
 	private LoraSurfaceView lView;
-
-	@Override
-	public void draw(GL10 gl) {
-		gl.glClearColor(mRed, mGreen, mBlue, 1.0f);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-
-	}
 
 	@Override
 	public void draw(Canvas canvas) {
@@ -55,8 +49,20 @@ public class ClearShape implements LoraShape {
 	}
 
 	@Override
-	public void setLoraView(LoraSurfaceView lView) {
-		this.lView = lView;
+	public int getOpacity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
+	@Override
+	public void setAlpha(int alpha) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setColorFilter(ColorFilter cf) {
+		// TODO Auto-generated method stub
+		
 	}
 }

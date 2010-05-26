@@ -2,8 +2,10 @@ package info.decamps.lorapaint;
 
 import info.decamps.lorapaint.shape.ClearShape;
 import info.decamps.lorapaint.shape.PointShape;
-import info.decamps.lorapaint.shape.SquareShape;
+import info.decamps.lorapaint.shape.RectShape;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +16,8 @@ import android.view.WindowManager;
 public class LoraPaintActivity extends Activity {
 	private boolean fullscreen=false;
 	private LoraSurfaceView lView; 
-	public static enum MENU {SHAPE_SQUARE, SHAPE_CLEAR, SHAPE_POINT, FILE_SAVE, FILE_QUIT}; 
+	public static enum MENU {SHAPE_SQUARE, SHAPE_CLEAR, SHAPE_POINT, FILE_SAVE, FILE_QUIT};
+	private Paint paint;
 	
     /** Called when the activity is first created. */
     @Override
@@ -27,7 +30,10 @@ public class LoraPaintActivity extends Activity {
     	}
  		lView = new LoraSurfaceView(this);
  		//default shape to avoid NPE
- 		lView.setShape(new SquareShape());
+ 		Paint paint = new Paint();
+ 		paint.setColor(Color.WHITE);
+ 		lView.setShape(new RectShape(paint));
+
    		//lView.setRenderer(new LoraRenderer());
    		setContentView(lView);
     }
@@ -48,11 +54,11 @@ public class LoraPaintActivity extends Activity {
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		LoraShape s;
+		LoraDrawable s;
 		switch (MENU.values().clone()[item.getItemId()]) {
 		//TODO Introspection on available shapes
 		case SHAPE_SQUARE:
-			s=new SquareShape();
+			s=new RectShape(paint);
 			lView.setShape(s);
 			return true;
 		case SHAPE_CLEAR:
@@ -60,7 +66,7 @@ public class LoraPaintActivity extends Activity {
 			lView.setShape(s);
 			return true;
 		case SHAPE_POINT:
-			s=new PointShape();
+			s=new PointShape(paint);
 			lView.setShape(s);
 			return true;
 		case FILE_QUIT:

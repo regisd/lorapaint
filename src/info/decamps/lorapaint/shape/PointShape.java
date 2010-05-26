@@ -1,16 +1,13 @@
 package info.decamps.lorapaint.shape;
 
-import javax.microedition.khronos.opengles.GL10;
-
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.opengl.GLSurfaceView;
-import android.view.MotionEvent;
-import info.decamps.lorapaint.LoraShape;
+import info.decamps.lorapaint.LoraDrawable;
 import info.decamps.lorapaint.LoraSurfaceView;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.view.MotionEvent;
 
-public class PointShape implements LoraShape{
+public class PointShape extends LoraDrawable{
 	boolean drawing=false;
 	private float x;
 	private float y;
@@ -18,15 +15,14 @@ public class PointShape implements LoraShape{
 	private LoraSurfaceView lView;
 	private static float MAX_RADIUS=20;
 	private static float MIN_RADIUS=5;
-	@Override
-	public void draw(GL10 gl) {
-		// TODO Auto-generated method stub
-		
+
+	public PointShape(Paint paint) {
+		super.paint=paint;
 	}
-	
+
 	@Override
 	public void draw(Canvas canvas) {
-		Paint p = lView.getPaint();
+		Paint p = super.paint;
 		p.setAlpha((int)(255*pressure)/2+125);
 		float radius=MAX_RADIUS*pressure+MIN_RADIUS*(1f-pressure);
 		canvas.drawCircle(x, y, radius, p);
@@ -48,8 +44,21 @@ public class PointShape implements LoraShape{
 	}
 
 	@Override
-	public void setLoraView(LoraSurfaceView lSurfaceView) {
-		lView=lSurfaceView;
+	public int getOpacity() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setAlpha(int alpha) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setColorFilter(ColorFilter cf) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

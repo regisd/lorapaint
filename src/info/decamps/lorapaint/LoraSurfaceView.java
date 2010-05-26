@@ -1,37 +1,40 @@
 package info.decamps.lorapaint;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
 public class LoraSurfaceView extends ImageView {
-	LoraShape shape;
-	Paint paint;
+	private LoraDrawable shape;
 
-	public Paint getPaint() {
-		return paint;
-	}
+	private ArrayList<LoraDrawable> history;
 
 	public LoraSurfaceView(Context context) {
 		super(context);
-		paint = new Paint();
-		paint.setColor(Color.WHITE);
+		history=new ArrayList<LoraDrawable>();
+
 	}
 
 	/** Grabs and transfers the onTouchEvent to the shape */
 	public boolean onTouchEvent(final MotionEvent event) {
-		System.out.println("touched for shape " + shape);
-		if (shape != null)
+		
+		if (shape != null){
 			shape.onTouchEvent(event);
+		}
+		if (event.getAction()==MotionEvent.ACTION_UP) {
+			history.add(shape);
+			System.out.println("shape " + shape+" added in history");
+		}
 		this.invalidate();
 		return true;
 	}
 
-	public void setShape(LoraShape shape) {
+	public void setShape(LoraDrawable shape) {
 		this.shape=shape;
 		shape.setLoraView(this);
 	}
@@ -39,6 +42,10 @@ public class LoraSurfaceView extends ImageView {
 	@Override
 	public void draw(Canvas canvas) {
 		super.draw(canvas);
+		for (LoraDrawable s : history) {
+			s.draw(canvas);
+			System.out.println("draw from history"+s);
+		}
 		if (shape != null)
 			shape.draw(canvas);
 	}
