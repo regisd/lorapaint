@@ -9,60 +9,63 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Paint.Style;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 public class ClearShape extends LoraDrawable {
-	private int mRed;
-	private int mGreen;
-	private int mBlue;
-	private int pressure;
+	private double MAX = 0;
+	private Point POINT_MIDDLE;
+	private float[] hsv=new float[3];
+
 	
-	private LoraSurfaceView lView;
+	public ClearShape(LoraSurfaceView lView) {
+		super(lView);
+		POINT_MIDDLE=new Point(lView.getWidth()/2,lView.getHeight()/2);
+		MAX=Math.pow(lView.getWidth()/2,2);
+	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		Paint p = new Paint();
-		int alpha=pressure/2+125;
-		p.setColor(Color.argb(alpha,mRed, mGreen, mBlue));
-		p.setStyle(Style.FILL);
-		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), p);
-	}
-
-	public void setColor(float r, float g, float b) {
-		mRed = (int)(255*r);
-		mGreen = (int)(255*g);
-		mBlue = (int)(255*b);
+		//p.setColor(Color.argb(mAlpha,mRed, mGreen, mBlue));
+		super.paint.setStyle(Style.FILL);
+		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), super.paint);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		setColor(event.getX() / lView.getWidth(), event.getY()
-				/ lView.getHeight(), 1.0f);
-		setPressure(event.getPressure());
-		return false;
-	}
+//		mRed=event.getX() / lView.getWidth();
+//		mGreen=event.getY()/ lView.getHeight();
+//		mBlue= 1.0f;
+		int x=(int)event.getX();
+		int y=(int) event.getY();
+		//hue 0..360. acos works in Radians
+		double x1=(double)(x-POINT_MIDDLE.x)/((double)super.lView.getWidth()/2);		
+		x1=Math.min(1,x1);
+		x1=Math.max(-1,x1);
+		hsv[0]=(float) (Math.acos(x1)*180/Math.PI);
+		if (y>POINT_MIDDLE.y) {
+			hsv[0]=360-hsv[0];
+		}
+		//saturation [Ø..1]
+		double d=dist(POINT_MIDDLE,x,y);
+		hsv[1]=(float) Math.min(1, d);
 
-	private void setPressure(float p) {
-		pressure=(int)(255*p);		
-	}
-
-	@Override
-	public int getOpacity() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setAlpha(int alpha) {
-		// TODO Auto-generated method stub
+		//value [0..1]
+		hsv[2]=event.getPressure();
 		
+		super.paint.setColor(Color.HSVToColor(hsv));
+		System.out.println("x="+x+" y="+y);
+
+		System.out.println("hsv="+hsv[0]+","+hsv[1]+","+hsv[2]);
+		return true;
 	}
 
-	@Override
-	public void setColorFilter(ColorFilter cf) {
-		// TODO Auto-generated method stub
-		
+	private double dist(Point p, int x, int y) {
+		double dif=Math.pow((p.x-x),2) + Math.pow(p.y-y,2);
+		return  Math.sqrt(dif/MAX);
 	}
 }

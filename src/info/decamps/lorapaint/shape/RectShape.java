@@ -22,31 +22,29 @@ public class RectShape extends LoraDrawable {
 	private Point orig;
 	private Point dest;
 
-	public RectShape(Paint paint) {
-		super.paint=paint;
-	}
-
-	public void draw(GL10 gl) {
+	public RectShape(LoraSurfaceView view) {
+		super(view);
+		super.paint=new Paint();
+		//TODO
+		paint.setColor(Color.WHITE);
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
 		if (dest != null && orig != null) {
-			canvas.drawRect(Math.min(orig.x,dest.x), 
-					Math.min(orig.y,dest.y), 
-					Math.max(orig.x, dest.x), 
-					Math.max(orig.y,dest.y),
-				super.paint);
+			canvas.drawRect(Math.min(orig.x, dest.x), Math.min(orig.y, dest.y),
+					Math.max(orig.x, dest.x), Math.max(orig.y, dest.y),
+					super.paint);
 		}
 	}
 
 	public void setTopLeftCorner(float x, float y) {
 		orig = new Point((int) x, (int) y);
-		dest=null;
+		dest = null;
 	}
 
 	private void setBottomRightCorner(float x, float y) {
-		dest = new Point((int)x,(int)y);
+		dest = new Point((int) x, (int) y);
 	}
 
 	@Override
@@ -64,27 +62,9 @@ public class RectShape extends LoraDrawable {
 		return true;
 	}
 
-
 	@Override
 	public String toString() {
-		return "Rectangle "+orig+dest;
+		return "Rectangle " + orig + dest;
 	}
 
-	@Override
-	public int getOpacity() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setAlpha(int alpha) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setColorFilter(ColorFilter cf) {
-		// TODO Auto-generated method stub
-		
-	}
 }
