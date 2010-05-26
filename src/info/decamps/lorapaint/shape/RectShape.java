@@ -32,7 +32,11 @@ public class RectShape extends LoraDrawable {
 	@Override
 	public void draw(Canvas canvas) {
 		if (dest != null && orig != null) {
-			canvas.drawRect(orig.x, orig.y, dest.x, dest.y, super.paint);
+			canvas.drawRect(Math.min(orig.x,dest.x), 
+					Math.min(orig.y,dest.y), 
+					Math.max(orig.x, dest.x), 
+					Math.max(orig.y,dest.y),
+				super.paint);
 		}
 	}
 
@@ -42,7 +46,7 @@ public class RectShape extends LoraDrawable {
 	}
 
 	private void setBottomRightCorner(float x, float y) {
-		dest = new Point((int) x, (int) y);
+		dest = new Point((int)x,(int)y);
 	}
 
 	@Override
