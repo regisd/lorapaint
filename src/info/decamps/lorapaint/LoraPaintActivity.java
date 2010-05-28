@@ -94,6 +94,8 @@ public class LoraPaintActivity extends Activity {
 	}
 
 	public void quit() {
-		// TODO Auto-generated method stub
+		// TODO Confirm dialog box
+		// TODO Save before quit
+		System.exit(0);
 	}
 }
