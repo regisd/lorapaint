@@ -1,9 +1,12 @@
 package info.decamps.lorapaint;
 
+import org.openintents.intents.FlashlightIntents;
+
 import info.decamps.lorapaint.shape.ClearShape;
 import info.decamps.lorapaint.shape.PointShape;
 import info.decamps.lorapaint.shape.RectShape;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -14,11 +17,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class LoraPaintActivity extends Activity {
+	private static final int REQUEST_CODE_PICK_COLOR = 1;
 	private boolean fullscreen = false;
 	private LoraSurfaceView lView;
 
 	public static enum MENU {
-		SHAPE_SQUARE, SHAPE_CLEAR, SHAPE_POINT, FILE_SAVE, FILE_QUIT
+		SHAPE_SQUARE, SHAPE_CLEAR, SHAPE_POINT, COLOR_SELECT, FILE_SAVE, FILE_QUIT
 	};
 
 	/** Called when the activity is first created. */
@@ -47,6 +51,7 @@ public class LoraPaintActivity extends Activity {
 		shapeMenu.add(0, MENU.SHAPE_SQUARE.ordinal(), 0, "Rectangle");
 		shapeMenu.add(0, MENU.SHAPE_CLEAR.ordinal(), 0, "Colorful background");
 		shapeMenu.add(0, MENU.SHAPE_POINT.ordinal(), 0, "debug point");
+		MenuItem colorMenu = menu.add(0, MENU.COLOR_SELECT.ordinal(), 0, "Color");
 		SubMenu fileMenu = menu.addSubMenu("File");
 		fileMenu.add(0, MENU.FILE_SAVE.ordinal(), 0, "Save");
 		fileMenu.add(0, MENU.FILE_QUIT.ordinal(), 0, "Quit");
@@ -68,6 +73,13 @@ public class LoraPaintActivity extends Activity {
 		case SHAPE_POINT:
 			new PointShape(lView);
 			//lView.setShape(s);
+			return true;
+		case COLOR_SELECT:
+			Intent myIntent = new Intent();
+			myIntent.setAction("org.openintents.action.PICK_COLOR");
+			int mColor=0;
+			myIntent.putExtra("org.openintents.extra.COLOR", mColor);
+			startActivityForResult(myIntent, REQUEST_CODE_PICK_COLOR);
 			return true;
 		case FILE_QUIT:
 			quit();

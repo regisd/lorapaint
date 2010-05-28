@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, LoraPaintActivity!</string>
     <string name="app_name">LoraPaint</string>
+<string name="activity_pick_color">Pick Color</string>
 </resources>

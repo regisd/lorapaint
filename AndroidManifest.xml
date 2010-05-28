@@ -11,7 +11,12 @@
             </intent-filter>
         </activity>
 
-    </application>
+    <activity android:label="@string/activity_pick_color" android:name="org.openintents.flashlight.ColorPickerActivity">
+<intent-filter><action android:name="org.openintents.action.PICK_COLOR"></action>
+<category android:name="android.intent.category.DEFAULT"></category>
+</intent-filter>
+</activity>
+</application>
     <uses-sdk android:minSdkVersion="3" />
 
 </manifest> 
