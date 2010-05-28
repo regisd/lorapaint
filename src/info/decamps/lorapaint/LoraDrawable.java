@@ -41,7 +41,6 @@ public abstract class LoraDrawable extends Drawable implements Cloneable {
 	@Override
 	public void setAlpha(int alpha) {
 		lPaint.setAlpha(alpha);
-
 	}
 
 	public void usePaint(Paint currentPaint) {

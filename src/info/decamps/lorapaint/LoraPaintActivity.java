@@ -18,13 +18,12 @@ import android.view.WindowManager;
 public class LoraPaintActivity extends Activity {
 	private static final int REQUEST_CODE_PICK_COLOR = 1;
 	// slightly transparent
-	private static final int DEFAULT_ALPHA = 200;
 	private boolean fullscreen = false;
 	private LoraSurfaceView lView;
 	private Paint currentPaint;
 
 	public static enum MENU {
-		SHAPE_SQUARE, SHAPE_CLEAR, SHAPE_POINT, COLOR_SELECT, FILE_SAVE, FILE_QUIT
+		SHAPE_SQUARE, BACKGROUND_UNICOLOR, SHAPE_POINT, COLOR_SELECT, EDIT_UNDO, FILE_SAVE, FILE_QUIT
 	};
 
 	/** Called when the activity is first created. */
@@ -37,16 +36,15 @@ public class LoraPaintActivity extends Activity {
 					WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 		lView = new LoraSurfaceView(this);
-
+		setContentView(lView);
+		
 		// default shape to avoid NPE
 		currentPaint = new Paint();
 		currentPaint.setColor(Color.WHITE);
-		currentPaint.setAlpha(DEFAULT_ALPHA);
-		LoraDrawable s=new ClearShape();
+		currentPaint.setAlpha(200);
+		LoraDrawable s=new PointShape();
 		s.init(lView, currentPaint);
-		
 
-		setContentView(lView);
 		lView.requestFocus();
 	}
 
@@ -57,13 +55,14 @@ public class LoraPaintActivity extends Activity {
 		// TODO plugin architecture
 		shapeMenu.add(0, MENU.SHAPE_SQUARE.ordinal(), 0, "Rectangle");
 		shapeMenu.add(0, MENU.SHAPE_POINT.ordinal(), 0, "Point");
-		shapeMenu.add(0, MENU.SHAPE_CLEAR.ordinal(), 0, "Background in colors");
+		shapeMenu.add(0, MENU.BACKGROUND_UNICOLOR.ordinal(), 0, "Background in colors");
 
-		MenuItem colorMenu = menu.add(0, MENU.COLOR_SELECT.ordinal(), 0,
+		MenuItem colorMenuItem = menu.add(0, MENU.COLOR_SELECT.ordinal(), 0,
 				"Color");
+		MenuItem undoMenuItem = menu.add(1, MENU.EDIT_UNDO.ordinal(), 0 , "Undo");
 		SubMenu fileMenu = menu.addSubMenu("File");
-		fileMenu.add(0, MENU.FILE_SAVE.ordinal(), 0, "Save");
-		fileMenu.add(0, MENU.FILE_QUIT.ordinal(), 0, "Quit");
+		fileMenu.add(1, MENU.FILE_SAVE.ordinal(), 0, "Save");
+		fileMenu.add(1, MENU.FILE_QUIT.ordinal(), 0, "Quit");
 		return true;
 	}
 
@@ -78,7 +77,7 @@ public class LoraPaintActivity extends Activity {
 		case SHAPE_POINT:
 			new PointShape().init(lView, currentPaint);
 			return true;
-		case SHAPE_CLEAR:
+		case BACKGROUND_UNICOLOR:
 			new ClearShape().init(lView,currentPaint);
 			return true;
 		case COLOR_SELECT:
@@ -89,6 +88,8 @@ public class LoraPaintActivity extends Activity {
 			startActivityForResult(myIntent, REQUEST_CODE_PICK_COLOR);
 
 			return true;
+		case EDIT_UNDO:
+			lView.undo();
 		case FILE_QUIT:
 			quit();
 			return true;
@@ -106,7 +107,6 @@ public class LoraPaintActivity extends Activity {
 						.getIntExtra("org.openintents.extra.COLOR", mColor);
 				currentPaint=new Paint();
 				currentPaint.setColor(mColor);
-				currentPaint.setAlpha(DEFAULT_ALPHA);// TODO
 				
 				//apply this color to future objects, even if the shape is unchanged
 				LoraDrawable s;

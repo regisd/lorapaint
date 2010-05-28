@@ -33,7 +33,6 @@ public class ClearShape extends LoraDrawable {
 
 	@Override
 	public void draw(Canvas canvas) {
-		// p.setColor(Color.argb(mAlpha,mRed, mGreen, mBlue));
 		super.lPaint.setStyle(Style.FILL);
 		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(),
 				super.lPaint);
@@ -63,9 +62,6 @@ public class ClearShape extends LoraDrawable {
 		hsv[2] = event.getPressure();
 
 		super.lPaint.setColor(Color.HSVToColor(hsv));
-		System.out.println("x=" + x + " y=" + y);
-
-		System.out.println("hsv=" + hsv[0] + "," + hsv[1] + "," + hsv[2]);
 		return true;
 	}
 

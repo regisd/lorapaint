@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="alertdialog_text">You have now a nice background. Now go to Menu > Select shape</string>
+    <string name="widget_colorpicker_help">Choose color with the circle, select saturation with the left bar and transparency with the right bar. Pick the circle to finish.</string>
     <string name="hello">Hello World, LoraPaintActivity!</string>
     <string name="app_name">LoraPaint</string>
 <string name="activity_pick_color">Pick Color</string>
