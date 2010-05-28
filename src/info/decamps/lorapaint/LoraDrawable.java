@@ -9,7 +9,6 @@ import android.view.View;
 
 public abstract class LoraDrawable extends Drawable implements Cloneable {
 	protected Paint lPaint;
-	private int alpha;
 	protected LoraSurfaceView lView;
 	/**
 	 * This function is called on the screen a MotionEvent is raised, and in
@@ -33,12 +32,12 @@ public abstract class LoraDrawable extends Drawable implements Cloneable {
 
 	@Override
 	public int getOpacity() {
-		return alpha;
+		return lPaint.getAlpha();
 	}
 
 	@Override
 	public void setAlpha(int alpha) {
-		this.alpha = alpha;
+		lPaint.setAlpha(alpha);
 
 	}
 
