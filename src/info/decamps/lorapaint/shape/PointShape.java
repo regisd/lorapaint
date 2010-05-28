@@ -32,8 +32,8 @@ public class PointShape extends LoraDrawable{
 	    // when pressure increase, the circle is bigger and more transparent
 	    float p=event.getPressure();
 	    radius=Math.max(radius,MAX_RADIUS*p+MIN_RADIUS*(1f-p));
-
-		lPaint.setAlpha(255-(int)(255*p)/2);
+	    int alpha = Math.min(lPaint.getAlpha(),255-(int)(255*p)/2);
+		lPaint.setAlpha(alpha);
 		
 		return true;
 	}

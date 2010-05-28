@@ -20,24 +20,33 @@ public class LoraSurfaceView extends View {
 
 	public LoraSurfaceView(Context context) {
 		super(context);
-		history=new ArrayList<LoraDrawable>();
+		history = new ArrayList<LoraDrawable>();
 	}
 
-
-	public boolean onTouchEvent(final MotionEvent event) {		
-		if (shape != null){
+	public boolean onTouchEvent(final MotionEvent event) {
+		if (shape != null) {
 			// transfers TouchEvent to the Shape
 			shape.onTouchEvent(event);
 		}
-		if (event.getAction()==MotionEvent.ACTION_UP) {
-			history.add(shape);
+		if (event.getAction() == MotionEvent.ACTION_UP) {
+			if (shape.getClass() == ClearShape.class && history.size()>0) {
+				// replace background
+				history.set(0, shape);
+			} else {
+				history.add(shape);				
+			}
+			
 			try {
-				shape=shape.clone();
-			} catch (CloneNotSupportedException e) {
+				// prepare next drawing
+				//shape = shape.clone();
+				Paint paint=shape.lPaint;
+				shape=shape.getClass().newInstance();
+				shape.init(this, paint);
+			} catch (Exception e) {
 				// safe
 				e.printStackTrace();
 			}
-			Log.d("LoraPaint", "shape " + shape+" added in history");
+			Log.d("LoraPaint", "shape " + shape + " added in history");
 		}
 		this.invalidate();
 		return true;
@@ -48,16 +57,16 @@ public class LoraSurfaceView extends View {
 	}
 
 	public void setShape(LoraDrawable shape) {
-		this.shape=shape;
-		//shape.setLoraView(this); done in constructor of shape
+		this.shape = shape;
+		// shape.setLoraView(this); done in constructor of shape
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		//super.draw(canvas);
+		// super.draw(canvas);
 		for (LoraDrawable s : history) {
 			s.draw(canvas);
-			//Log.d("LoraPaint","draw from history"+s);
+			// Log.d("LoraPaint","draw from history"+s);
 		}
 		if (shape != null)
 			shape.draw(canvas);

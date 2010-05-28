@@ -18,14 +18,16 @@ import android.view.View;
 
 public class ClearShape extends LoraDrawable {
 	private double MAX = 0;
-	private Point POINT_MIDDLE=new Point(0,0);
+	// Most screens are 320x480, bust init will set it correctly
+	private Point POINT_MIDDLE=new Point(160,240);
 	private float[] hsv = new float[3];
 
 	@Override
 	public void init(LoraSurfaceView view, Paint paint) {
 		// Paint is smartly created when user touches the screen
-		super.init(view, new Paint());
-		POINT_MIDDLE = new Point(lView.getWidth() / 2, lView.getHeight() / 2);
+		super.init(view, paint);
+		//FIXME: POINT_MIDLE bouge pas
+		POINT_MIDDLE.set(lView.getWidth() / 2 , lView.getHeight() / 2);
 		MAX = Math.pow(lView.getWidth() / 2, 2);
 	}
 

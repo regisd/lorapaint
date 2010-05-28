@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,7 +42,9 @@ public class LoraPaintActivity extends Activity {
 		currentPaint = new Paint();
 		currentPaint.setColor(Color.WHITE);
 		currentPaint.setAlpha(DEFAULT_ALPHA);
-		new RectShape().init(lView, currentPaint);
+		LoraDrawable s=new ClearShape();
+		s.init(lView, currentPaint);
+		
 
 		setContentView(lView);
 		lView.requestFocus();
