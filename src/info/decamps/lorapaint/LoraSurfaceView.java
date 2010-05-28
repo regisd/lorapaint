@@ -34,13 +34,17 @@ public class LoraSurfaceView extends View {
 			try {
 				shape=shape.clone();
 			} catch (CloneNotSupportedException e) {
-				// safe: Shapes are clonable
+				// safe
 				e.printStackTrace();
 			}
 			Log.d("LoraPaint", "shape " + shape+" added in history");
 		}
 		this.invalidate();
 		return true;
+	}
+
+	public LoraDrawable getShape() {
+		return shape;
 	}
 
 	public void setShape(LoraDrawable shape) {

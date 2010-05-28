@@ -22,10 +22,6 @@ public class RectShape extends LoraDrawable {
 	private Point orig;
 	private Point dest;
 
-	public RectShape(LoraSurfaceView view, Paint paint) {
-		super(view, paint);
-	}
-
 	@Override
 	public void draw(Canvas canvas) {
 		if (dest != null && orig != null) {

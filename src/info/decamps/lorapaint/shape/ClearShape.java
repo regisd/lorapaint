@@ -18,55 +18,57 @@ import android.view.View;
 
 public class ClearShape extends LoraDrawable {
 	private double MAX = 0;
-	private Point POINT_MIDDLE;
-	private float[] hsv=new float[3];
+	private Point POINT_MIDDLE=new Point(0,0);
+	private float[] hsv = new float[3];
 
-	
-	public ClearShape(LoraSurfaceView lView) {
+	@Override
+	public void init(LoraSurfaceView view, Paint paint) {
 		// Paint is smartly created when user touches the screen
-		super(lView, new Paint());
-		POINT_MIDDLE=new Point(lView.getWidth()/2,lView.getHeight()/2);
-		MAX=Math.pow(lView.getWidth()/2,2);
+		super.init(view, new Paint());
+		POINT_MIDDLE = new Point(lView.getWidth() / 2, lView.getHeight() / 2);
+		MAX = Math.pow(lView.getWidth() / 2, 2);
 	}
 
 	@Override
 	public void draw(Canvas canvas) {
-		//p.setColor(Color.argb(mAlpha,mRed, mGreen, mBlue));
+		// p.setColor(Color.argb(mAlpha,mRed, mGreen, mBlue));
 		super.lPaint.setStyle(Style.FILL);
-		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), super.lPaint);
+		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(),
+				super.lPaint);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-//		mRed=event.getX() / lView.getWidth();
-//		mGreen=event.getY()/ lView.getHeight();
-//		mBlue= 1.0f;
-		int x=(int)event.getX();
-		int y=(int) event.getY();
-		//hue 0..360. acos works in Radians
-		double x1=(double)(x-POINT_MIDDLE.x)/((double)super.lView.getWidth()/2);		
-		x1=Math.min(1,x1);
-		x1=Math.max(-1,x1);
-		hsv[0]=(float) (Math.acos(x1)*180/Math.PI);
-		if (y>POINT_MIDDLE.y) {
-			hsv[0]=360-hsv[0];
+		// mRed=event.getX() / lView.getWidth();
+		// mGreen=event.getY()/ lView.getHeight();
+		// mBlue= 1.0f;
+		int x = (int) event.getX();
+		int y = (int) event.getY();
+		// hue 0..360. acos works in Radians
+		double x1 = (double) (x - POINT_MIDDLE.x)
+				/ ((double) super.lView.getWidth() / 2);
+		x1 = Math.min(1, x1);
+		x1 = Math.max(-1, x1);
+		hsv[0] = (float) (Math.acos(x1) * 180 / Math.PI);
+		if (y > POINT_MIDDLE.y) {
+			hsv[0] = 360 - hsv[0];
 		}
-		//saturation [Ø..1]
-		double d=dist(POINT_MIDDLE,x,y);
-		hsv[1]=(float) Math.min(1, d);
+		// saturation [Ø..1]
+		double d = dist(POINT_MIDDLE, x, y);
+		hsv[1] = (float) Math.min(1, d);
 
-		//value [0..1]
-		hsv[2]=event.getPressure();
-		
+		// value [0..1]
+		hsv[2] = event.getPressure();
+
 		super.lPaint.setColor(Color.HSVToColor(hsv));
-		System.out.println("x="+x+" y="+y);
+		System.out.println("x=" + x + " y=" + y);
 
-		System.out.println("hsv="+hsv[0]+","+hsv[1]+","+hsv[2]);
+		System.out.println("hsv=" + hsv[0] + "," + hsv[1] + "," + hsv[2]);
 		return true;
 	}
 
 	private double dist(Point p, int x, int y) {
-		double dif=Math.pow((p.x-x),2) + Math.pow(p.y-y,2);
-		return  Math.sqrt(dif/MAX);
+		double dif = Math.pow((p.x - x), 2) + Math.pow(p.y - y, 2);
+		return Math.sqrt(dif / MAX);
 	}
 }

@@ -7,10 +7,6 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 
 public class PointShape extends LoraDrawable{
-	public PointShape(LoraSurfaceView view, Paint paint) {
-		super(view,paint);
-	}
-
 	boolean drawing=false;
 	private float x;
 	private float y;
