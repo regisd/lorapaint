@@ -22,11 +22,8 @@ public class RectShape extends LoraDrawable {
 	private Point orig;
 	private Point dest;
 
-	public RectShape(LoraSurfaceView view) {
-		super(view);
-		super.paint=new Paint();
-		//TODO
-		paint.setColor(Color.WHITE);
+	public RectShape(LoraSurfaceView view, Paint paint) {
+		super(view, paint);
 	}
 
 	@Override
@@ -34,7 +31,7 @@ public class RectShape extends LoraDrawable {
 		if (dest != null && orig != null) {
 			canvas.drawRect(Math.min(orig.x, dest.x), Math.min(orig.y, dest.y),
 					Math.max(orig.x, dest.x), Math.max(orig.y, dest.y),
-					super.paint);
+					super.lPaint);
 		}
 	}
 

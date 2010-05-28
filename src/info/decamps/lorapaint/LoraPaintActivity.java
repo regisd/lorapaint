@@ -18,9 +18,11 @@ import android.view.WindowManager;
 
 public class LoraPaintActivity extends Activity {
 	private static final int REQUEST_CODE_PICK_COLOR = 1;
+	private static final int DEFAULT_ALPHA = 10;
 	private boolean fullscreen = false;
 	private LoraSurfaceView lView;
-
+	private Paint currentPaint;
+	
 	public static enum MENU {
 		SHAPE_SQUARE, SHAPE_CLEAR, SHAPE_POINT, COLOR_SELECT, FILE_SAVE, FILE_QUIT
 	};
@@ -37,7 +39,9 @@ public class LoraPaintActivity extends Activity {
 		lView = new LoraSurfaceView(this);
 		
 		// default shape to avoid NPE
-		lView.setShape(new RectShape(lView));
+		currentPaint=new Paint(Color.WHITE);
+		currentPaint.setAlpha(DEFAULT_ALPHA);
+		new RectShape(lView,currentPaint);
 
 		setContentView(lView);
 		lView.requestFocus();
@@ -49,8 +53,9 @@ public class LoraPaintActivity extends Activity {
 		SubMenu shapeMenu = menu.addSubMenu("Select Shape");
 		// TODO plugin architecture
 		shapeMenu.add(0, MENU.SHAPE_SQUARE.ordinal(), 0, "Rectangle");
-		shapeMenu.add(0, MENU.SHAPE_CLEAR.ordinal(), 0, "Colorful background");
-		shapeMenu.add(0, MENU.SHAPE_POINT.ordinal(), 0, "debug point");
+		shapeMenu.add(0, MENU.SHAPE_POINT.ordinal(), 0, "Point");
+		shapeMenu.add(0, MENU.SHAPE_CLEAR.ordinal(), 0, "Background in colors");
+
 		MenuItem colorMenu = menu.add(0, MENU.COLOR_SELECT.ordinal(), 0, "Color");
 		SubMenu fileMenu = menu.addSubMenu("File");
 		fileMenu.add(0, MENU.FILE_SAVE.ordinal(), 0, "Save");
@@ -63,22 +68,22 @@ public class LoraPaintActivity extends Activity {
 		switch (MENU.values().clone()[item.getItemId()]) {
 		// TODO Introspection on available shapes
 		case SHAPE_SQUARE:
-			new RectShape(lView);
+			new RectShape(lView,currentPaint);
 			//lView.setShape(s); done in constructor
+			return true;
+		case SHAPE_POINT:
+			new PointShape(lView,currentPaint);
 			return true;
 		case SHAPE_CLEAR:
 			new ClearShape(lView);
-			//lView.setShape(s);
-			return true;
-		case SHAPE_POINT:
-			new PointShape(lView);
-			//lView.setShape(s);
 			return true;
 		case COLOR_SELECT:
 			Intent myIntent = new Intent();
 			myIntent.setAction("org.openintents.action.PICK_COLOR");
 			int mColor=0;
 			myIntent.putExtra("org.openintents.extra.COLOR", mColor);
+			currentPaint.setColor(mColor);
+			currentPaint.setAlpha(DEFAULT_ALPHA);//TODO
 			startActivityForResult(myIntent, REQUEST_CODE_PICK_COLOR);
 			return true;
 		case FILE_QUIT:

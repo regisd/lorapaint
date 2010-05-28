@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public abstract class LoraDrawable extends Drawable implements Cloneable {
-	protected Paint paint;
+	protected Paint lPaint;
 	private int alpha;
 	protected LoraSurfaceView lView;
 	/**
@@ -20,8 +20,8 @@ public abstract class LoraDrawable extends Drawable implements Cloneable {
 	 */
 	public abstract boolean onTouchEvent(MotionEvent event);
 
-	public LoraDrawable(LoraSurfaceView view) {
-		paint = new Paint();
+	public LoraDrawable(LoraSurfaceView view, Paint paint) {
+		this.lPaint = paint;
 		lView=view;
 		lView.setShape(this);
 	}

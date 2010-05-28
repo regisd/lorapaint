@@ -1,5 +1,7 @@
 package info.decamps.lorapaint;
 
+import info.decamps.lorapaint.shape.ClearShape;
+
 import java.util.ArrayList;
 
 import android.content.Context;

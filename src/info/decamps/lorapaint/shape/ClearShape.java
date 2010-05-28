@@ -23,7 +23,8 @@ public class ClearShape extends LoraDrawable {
 
 	
 	public ClearShape(LoraSurfaceView lView) {
-		super(lView);
+		// Paint is smartly created when user touches the screen
+		super(lView, new Paint());
 		POINT_MIDDLE=new Point(lView.getWidth()/2,lView.getHeight()/2);
 		MAX=Math.pow(lView.getWidth()/2,2);
 	}
@@ -31,8 +32,8 @@ public class ClearShape extends LoraDrawable {
 	@Override
 	public void draw(Canvas canvas) {
 		//p.setColor(Color.argb(mAlpha,mRed, mGreen, mBlue));
-		super.paint.setStyle(Style.FILL);
-		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), super.paint);
+		super.lPaint.setStyle(Style.FILL);
+		canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), super.lPaint);
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public class ClearShape extends LoraDrawable {
 		//value [0..1]
 		hsv[2]=event.getPressure();
 		
-		super.paint.setColor(Color.HSVToColor(hsv));
+		super.lPaint.setColor(Color.HSVToColor(hsv));
 		System.out.println("x="+x+" y="+y);
 
 		System.out.println("hsv="+hsv[0]+","+hsv[1]+","+hsv[2]);
