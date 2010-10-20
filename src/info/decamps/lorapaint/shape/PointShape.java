@@ -1,66 +1,74 @@
 package info.decamps.lorapaint.shape;
 
+import info.decamps.lorapaint.LoraAlphaVariation;
 import info.decamps.lorapaint.LoraDrawable;
+import android.graphics.drawable.Drawable;
 import info.decamps.lorapaint.LoraSurfaceView;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class PointShape extends LoraDrawable {
+public class PointShape  extends LoraDrawable {
 	private static final int MAX_RADIUS = 80;
-	private static final int MIN_RADIUS = 5;
-	private static final int MIN_ALPHA = 10;
-	private static final int MAX_ALPHA = 255;
+	private static final int MIN_RADIUS = 2;
 
-	// private static float MIN_PRESSURE=0.1f;
-	// private static float MAX_PRESSURE=0.7f;
 	private static final int MIN_PRESSURE = 100;
 	private static final int MAX_PRESSURE = 700;
-	private static final int MIN_TIME = 50;// ms
-	private static final int MAX_TIME = 3000;// ms
 
-	private float x;
-	private float y;
-	private int radius = 0;
-	private long creationTime = 0;
-	private boolean drawing = false;
+	public float x;
+	public float y;
+	public int radius;
+	
+	private static String TAG = "LoraPaint PointShape";
+
+	public PointShape() {
+		mHandler=new Handler();
+		mUpdateAlphaTask = new LoraAlphaVariation(this);
+	}
 
 	@Override
 	public void draw(Canvas canvas) {
+		Log.d(TAG,this.toString());
 		canvas.drawCircle(x, y, radius, lPaint);
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			creationTime = System.currentTimeMillis();
-			drawing = true;
+			// countdown based on the idea of
+			// http://developer.android.com/resources/articles/timed-ui-updates.html
+			if (creationTime == 0L) {
+				creationTime = SystemClock.uptimeMillis();
+				mHandler.removeCallbacks(mUpdateAlphaTask);
+				lPaint.setAlpha(LoraAlphaVariation.MIN_ALPHA);
+				mHandler.postDelayed(mUpdateAlphaTask, 1);
+			}
+
 		} else if (event.getAction() == MotionEvent.ACTION_UP) {
-			drawing = false;
+			mHandler.removeCallbacks(mUpdateAlphaTask);
 		}
-		if (drawing) {
-			// update position, radius and alpha when 'drawing' 
+		if (creationTime != 0L) {
+			// update position, radius and alpha when 'drawing'
 			// (ie. touch has not been released)
 			x = event.getX();
 			y = event.getY();
 
-			Log.d("Point pressure", "p=" + event.getPressure());
+			Log.d(TAG, "Point pressure p=" + event.getPressure());
 			// when pressure increase, the circle is bigger
 			int p = (int) (event.getPressure() * 1000);
 			int r = ((MAX_RADIUS - MIN_RADIUS) * p)
 					/ (MAX_PRESSURE - MIN_PRESSURE) + MIN_RADIUS;
 			radius = Math.max(r, radius);
-
-			// when time last, the circle is more transparent
-			long d1 = (int) (System.currentTimeMillis() - creationTime);
-			int d = (int) ((d1 > MAX_TIME) ? MAX_TIME : d1);
-			int alpha = (MAX_ALPHA - MIN_ALPHA) * d / (MAX_TIME - MIN_TIME)
-					+ MIN_ALPHA;
-			alpha=Math.max(alpha,MIN_ALPHA);
-			alpha=Math.min(alpha, MAX_ALPHA);
-			lPaint.setAlpha(alpha);
+			setBounds((int)(x-radius), (int)(y-radius), (int)(x+radius), (int)(y+radius));
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return "Circle radius=" + radius + " ; alpha=" + lPaint.getAlpha();
 	}
 }

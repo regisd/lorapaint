@@ -84,7 +84,7 @@ public class LoraSurfaceView extends View {
 		if (shape != null)
 			shape.draw(canvas);
 	}
-
+	
 	public void undo() {
 		int size = history.size();
 		// cannot remove background and avoid IndexOutOfBoundsException
